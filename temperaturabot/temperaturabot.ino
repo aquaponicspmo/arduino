@@ -25,13 +25,13 @@ String temperatura = "zero gradi"; //Inizializzo una variabile di tipo stringa p
 
 // Connetto l'Arduino MKR1000 al Wi-Fi 
 
-char ssid[] = "mettiquiilnomedellawifi";             // Tra virgolette inserisco il nome della rete Wi-Fi
-char pass[] = "mettiquilapassworddellawifi";           // Tra virgolette inserisco la password del Wi-Fi
+char ssid[] = "nomewifi";             // Tra virgolette inserisco il nome della rete Wi-Fi
+char pass[] = "passwordwifi";           // Tra virgolette inserisco la password del Wi-Fi
 
 
 // Inizializzo il BOT Telegram 
 
-const char BotToken[] = "mettiquiiltokendelbottelegram"; //Tra virgolette inserisco il token del bot, fornito da @BotFather
+const char BotToken[] = "numerotoken"; //Tra virgolette inserisco il token del bot, fornito da @BotFather
 
 WiFiSSLClient client;
 TelegramBot bot (BotToken, client);
@@ -65,14 +65,14 @@ void loop() {
   
     Watchdog.reset(); 
 
-    sensorValue = analogRead(sensorPin); //Leggo il valore dal sensore
-    voltage = sensorValue * (3300/1024); //Converto il valore del sensore in volt
-    temperature = (voltage - 500 ) / 10; //Converto i volt in temperatura in base alle specifiche del sensore TMP36
-    temperatura = String(temperature); //Converto la temperatura da numero a stringa
-    
     message m = bot.getUpdates(); // Leggo i messaggi provenienti dal bot
     
     if ( m.text.equals("temperatura")){ // Controllo se l'utente ha inviato un messaggio col testo temperatura
+      
+      sensorValue = analogRead(sensorPin); //Leggo il valore dal sensore
+      voltage = sensorValue * (3300/1024); //Converto il valore del sensore in volt
+      temperature = (voltage - 500 ) / 10; //Converto i volt in temperatura in base alle specifiche del sensore TMP36
+      temperatura = String(temperature); //Converto la temperatura da numero a stringa
       
       Serial.println(temperatura); //Stampo sul monitor seriale il valore della temperatura
       bot.sendMessage(m.chat_id, "la tempertura è di "+temperatura+" °c");  // Invio la temperatura all'utente via chat Telegram
